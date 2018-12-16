@@ -1,0 +1,72 @@
+---
+title: "Práctica 5"
+author: "Daniel Tomé Gordo"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r}
+##1. Crear un proyecto denominado diamonds en una carpeta específica donde almacenar todos los archivos generados
+
+library(tidyverse)
+library(dplyr)
+library(hexbin)
+library(ggplot2)
+library(readr)
+
+##2. Comprobar distintas formas de cargar datos y almacenar resultados
+
+#Cargamos todas las librerías
+data(diamonds)
+#Cargamos el dataset diamonds
+ggplot(diamonds)+
+  geom_hex(aes(carat, price))
+#Hace un mapa de calor que nos muestra el conteo de cada registro en el gráfico
+ggsave("carat-price.png")
+
+##3. Modificar el fichero de datos y almacenarlo actualizado de distintas formas
+
+datos_diamantes<-read.csv("diamonds.csv")
+str(diamonds)
+str(datos_diamantes)
+#Ambos dataset tienen la misma composición, excepto la primera columna de datos_diamantes que tiene una primera columna que contiene un indicador 
+datos2_diamantes<-read_csv("diamonds.csv")
+str(datos2_diamantes)
+#Posee las mismas variables que el dataset datos_diamantes
+ggplot(datos_diamantes)+
+  geom_hex(aes(color,price))
+#Graficamos igual que antes, pero con color y precio
+ggsave("color-price.pdf")
+#Guardamos en PDF
+datos_diamantes<-mutate(datos_diamantes, vol=x*y*z)
+write.csv(datos_diamantes,"datos_diamantes.csv")
+#Creamos una nueva variable, vol, y guardamos como csv ese dataset. Aquí usamos el write nativo
+datos2_diamantes<-rename(datos2_diamantes,precio=price)
+write_csv(datos2_diamantes, "datos2_diamantes.csv")
+#Renombramos una variable y guardamos como csv ese dataset. Aquí usamos la librería tidyverse
+
+
+#1. Crea una función que calcule el volumen de un cubo a partir de los valores: alto, ancho y profundo
+
+vol<-function (x,y,z){
+  resultado<-(x*y*z)
+  return(round(resultado,2))
+}
+vol(2,4.333,2) #Funciona 
+
+#3. Aplicar la función volumen al dataset diamonds
+library(tidyverse)
+data("diamonds")
+datos_diamantes<-mutate(diamonds, volumen=(vol(diamonds$x,diamonds$y, diamonds$z))) #Incluyo una nueva columna en diamonds usando la función anterior
+head(datos_diamantes$volumen)
+
+#4. Representar graficamente la relacion precio-volumen y guardar como un archivo png
+ggplot(datos_diamantes)+
+  geom_hex(aes(volumen,price)) #Creo el gráfico (como nube de puntos)
+ggsave("volumen-precio.png") #Lo guardo en formato .png
+
+
+```
+

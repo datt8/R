@@ -1,0 +1,130 @@
+---
+title: "Práctica 6"
+author: "Daniel Tomé Gordo"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+FUNCIÓN FACTORIAL
+
+```{r}
+fact<-function(x){
+  if (x==0)
+    res<-1
+  else
+    res<-x*fact(x-1)
+  return(res)
+} 
+fact(5) 
+```
+Está llamando recursivamente a la función con fact.Por ejemplo, con 5 se convierte en 5xfact(5-1), luego en 5x4xfact(4-1) y así hasta que llegue a 0 (5x4x3x2x1x1)
+
+```{r} 
+fact2<-function(x){
+  res<-1
+  for (i in (x:1)){
+    res<-res*i
+  }
+  return(res)
+}
+fact2(4)
+
+```
+
+FUNCIÓN DE FIBONACCI
+
+```{r}
+fib<-function(n){
+  if (n==0|n==1)
+    res<-n
+  else
+    res<-fib(n-1)+fib(n-2)
+  return(res)
+}
+fib(5)
+fib(15)
+```
+
+Este algoritmo tiene un tiempo de ejecución exponencial (tarda muchísimo en n muy altos)
+
+```{r}
+fib2<-function(n){
+  res<-c(1,1)
+  for (i in (3:n))
+    res<-c(res,res[i-1]+res[i-2])
+  return(res[n])
+}
+fib2(8)
+```
+Usa muchísima memoria para calcular el Fibonacci de un número muy grande
+
+```{r}
+fib3<-function(n){
+f1<-1 
+f2<-1
+aux<-f1+f2
+if (n>2) {
+for (i in 2:n){
+  f1<-f2
+  f2<-aux
+  aux<-f1+f2
+  }
+ }
+return(f1)
+}
+fib3(0)
+```
+
+Se guardan en f1 y f2 los dos primeros valores de la sucesión. Esta función usa menos recursos que fib2, lo que la hace más interesante
+
+```{r}
+fib4<-function(n,f1,f2){
+  if (n==0)
+    res<-0
+  else if(n==1)
+    res<-f1
+  else
+    res<-fib4(n-1,f2,f1+f2)
+  return(res)
+}
+fib4(3,1,1)
+fib4(0,1,1)
+
+```
+Evalúa fib4(4,1,1)=fib4(3,1,2)=fib4(2,2,3)=fib4(1,3,5)--> da f1 como resultado Fibonacci de 4 es 3
+
+ALGORITMO DE EÚCLIDES
+
+```{r}
+mcd <- function(a, b)
+{
+  n1 <- a;
+  n2 <- b;
+    while(n2 != 0) {
+    n1%%n2 -> r; 
+    n2-> n1;     
+    r->n2;       
+  }              
+  return(n1)
+}
+```
+Se repite el mismo proceso hasta que el resto se convierta en 0. El resto de la división se guarda en r, el divisor se convierte en dividendo y el resto anteriormente hallado se convierte en el nuevo divisor
+```{r}
+mcd(18,25) 
+mcd(999,99)
+```
+
+Estas tres funciones son aplicables en distintos ámbitos de la sociedad. La función factorial tiene unas aplicaciones básicamente matemáticas, ya que se usa sobre todo en aquello relacionado con la combinatoria, adentrándose en temas probabilísticos.
+La sucesión de Fibonacci es usada por ejemplo en el mundo bursátil para predecir las subidas y bajadas en el precio de un título a través de la teoría de las Ondas de Elliot. Esta dice que toda tendencia principal se compone de 5 ondas (3 impulsoras y 2 correctoras) y la tendencia contraria en 3 ondas (2 impulsoras y 1 correctora). Además que entre el fin de una onda de un tipo y el fin de una onda de ese mismo tipo, pasa un período de tiempo d*nºaureo. El número aúreo es el límite de la sucesión de Fibonacci.
+Por último, la principal aplicación del Algoritmo de Eúclides es la simplificación de fracciones o para expresar cualquier fracción como una fracción continua.
+A pesar de haber "creado" unos determinados algoritmos, en R ya existen funciones creadas por otros desarrolladores para realizar lo mismo.
+
+```{r}
+library(numbers)
+GCD(25,18) #Máximo común divisor
+factorial(5) #Factorial de un número
+fibonacci(6) #Fibonacci de ese número
+```
+
